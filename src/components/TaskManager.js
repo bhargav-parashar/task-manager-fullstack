@@ -4,6 +4,9 @@ import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import TaskTable from "./TaskTable";
 import TaskModal from "./TaskModal";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 export const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
@@ -11,6 +14,7 @@ export const TaskManager = () => {
   const [taskData, setTaskData] = useState(null);
   const [file, setFile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -19,6 +23,8 @@ export const TaskManager = () => {
         setTasks(response.data);
       } catch (err) {
         console.error("Error fetching tasks:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -119,7 +125,9 @@ export const TaskManager = () => {
 
   return (
     <div>
-      {tasks.length ? (
+      {loading ? (
+        <LoadingIndicator />
+      ) : tasks.length ? (
         <TaskTable
           tasks={tasks}
           onMarkAsDone={handleMarkAsDone}
@@ -151,7 +159,7 @@ export const TaskManager = () => {
         file={file}
         isEditing={isEditing}
       />
-      <button
+      {/* <button
         onClick={handleAddClick}
         style={{
           position: "absolute",
@@ -160,7 +168,20 @@ export const TaskManager = () => {
         }}
       >
         Add Task
-      </button>
+      </button> */}
+      
+      <Fab
+        aria-label="add"
+        color="primary"
+        onClick={handleAddClick}
+        style={{
+          position: "absolute",
+          bottom: 16,
+          right: 16,
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </div>
   );
 };
