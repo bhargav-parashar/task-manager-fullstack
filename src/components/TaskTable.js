@@ -11,7 +11,13 @@ import {
   Paper,
 } from "@mui/material";
 
-const TaskTable = ({ tasks, onMarkAsDone, onDelete }) => {
+const TaskTable = ({
+  tasks,
+  onMarkAsDone,
+  onDownloadFile,
+  onEdit,
+  onDelete,
+}) => {
   const formatDate = (date) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(date).toLocaleDateString(undefined, options);
@@ -21,9 +27,8 @@ const TaskTable = ({ tasks, onMarkAsDone, onDelete }) => {
     const now = new Date();
     const deadlineDate = new Date(deadline);
 
-    console.log("getStatus", status);
     if (status === "DONE") {
-      return now < deadlineDate ? "Achieved" : "In Progress";
+      return now > deadlineDate ? "Achieved" : "In Progress";
     } else {
       return now > deadlineDate ? "Failed" : "In Progress";
     }
@@ -82,6 +87,19 @@ const TaskTable = ({ tasks, onMarkAsDone, onDelete }) => {
                 {task.status === "TODO" && (
                   <button onClick={() => onMarkAsDone(task._id)}>Done</button>
                 )}
+                {task.linkedFile && (
+                  <button
+                    onClick={() =>
+                      onDownloadFile(
+                        new Uint8Array(task.linkedFile.data.data),
+                        task.linkedFile.contentType
+                      )
+                    }
+                  >
+                    Download
+                  </button>
+                )}
+                <button onClick={() => onEdit(task)}>Edit</button>
                 <button onClick={() => onDelete(task._id)}>Delete</button>
               </TableCell>
             </TableRow>
