@@ -91,7 +91,7 @@ export const TaskManager = () => {
 
   const handleMarkAsDone = async (taskId) => {
     try {
-      await axios.patch(`${apiEndpoint}/tasks${taskId}`, {
+      await axios.patch(`${apiEndpoint}/tasks/${taskId}`, {
         status: "DONE",
       });
       const response = await axios.get(`${apiEndpoint}/tasks`);
